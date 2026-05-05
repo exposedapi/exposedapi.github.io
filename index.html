@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>exposedapi's blog</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Roboto+Mono:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue-accent:  #2563eb;
+      --text-primary: #0f172a;
+      --text-muted:   #8a94a6;
+      --text-body:    #334155;
+      --card-bg:      rgba(255,255,255,0.58);
+      --card-border:  rgba(59,130,246,0.15);
+      --card-shadow:  0 4px 24px rgba(37,99,235,0.08);
+      --font-jp:      'Noto Serif JP', serif;
+      --font-mono:    'Roboto Mono', monospace;
+      --font-sans:    'DM Sans', sans-serif;
+      --font-sf:      'IBM Plex Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(150deg,
+        #ffffff 0%,
+        #eff6ff 22%,
+        #dbeafe 45%,
+        #bfdbfe 68%,
+        #93c5fd 88%,
+        #60a5fa 100%
+      );
+      font-family: var(--font-sf);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 52px 24px 68px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 48px;
+    }
+
+    /* ── Main title row ── */
+    .name-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    /* こんにちは column */
+    .jp-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .jp {
+      font-family: var(--font-jp);
+      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      font-weight: 200;
+      color: var(--text-primary);
+      letter-spacing: 0.12em;
+      line-height: 1.1;
+    }
+
+    .jp-sub {
+      font-family: var(--font-sf);
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      font-style: italic;
+    }
+
+    /* divider */
+    .name-divider {
+      font-family: var(--font-sf);
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 200;
+      color: var(--text-muted);
+      opacity: 0.45;
+      padding-bottom: 4px;
+      line-height: 1;
+    }
+
+    /* I am + exposedapi column */
+    .handle-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* "I am" prefix sits inline with exposedapi */
+    .handle-top {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .i-am {
+      font-family: var(--font-sf);
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      font-weight: 300;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    /* exposedapi — gradient light pink → white → baby pink */
+    .handle {
+      font-family: var(--font-mono);
+      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      background: linear-gradient(90deg, #f9a8d4 0%, #fce7f3 38%, #ffffff 62%, #fbcfe8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* subtle text shadow so it reads on the light bg */
+      filter: drop-shadow(0 1px 6px rgba(236,72,153,0.18));
+      font-variant: small-caps;
+    }
+
+    .handle-sub {
+      font-family: var(--font-sf);
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      font-style: italic;
+    }
+
+    /* ── Tagline ── */
+    .tagline {
+      margin-top: 24px;
+      font-family: var(--font-sans);
+      font-size: clamp(0.78rem, 1.3vw, 0.9rem);
+      font-weight: 500;
+      color: var(--text-body);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .tagline span {
+      opacity: 0.35;
+      margin: 0 9px;
+      font-weight: 300;
+    }
+
+    /* ── Description — reduced gap from tagline ~0.7cm ≈ 10px ── */
+    .description {
+      margin-top: 10px;
+      font-family: var(--font-sf);
+      font-size: clamp(0.8rem, 1.35vw, 0.9rem);
+      color: var(--text-body);
+      max-width: 500px;
+      line-height: 1.78;
+      opacity: 0.78;
+    }
+
+    /* ── Cards ── */
+    .cards {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 13px;
+      padding: 22px 22px 20px;
+      width: 205px;
+      backdrop-filter: blur(16px) saturate(1.5);
+      -webkit-backdrop-filter: blur(16px) saturate(1.5);
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 38px rgba(37,99,235,0.14);
+      border-color: rgba(59,130,246,0.38);
+    }
+
+    .card-title {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+    }
+
+    .card-desc {
+      font-family: var(--font-sf);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.68;
+      font-weight: 400;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 48px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      opacity: 0.5;
+      letter-spacing: 0.08em;
+      z-index: 1;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero  { animation: fadeUp 0.75s ease both; }
+    .card:nth-child(1) { animation: fadeUp 0.6s 0.22s ease both; }
+    .card:nth-child(2) { animation: fadeUp 0.6s 0.34s ease both; }
+    .card:nth-child(3) { animation: fadeUp 0.6s 0.46s ease both; }
+    .footer { animation: fadeUp 0.6s 0.5s ease both; }
+
+    @media (max-width: 600px) {
+      .card { width: 100%; max-width: 330px; }
+      .name-row { gap: 8px; }
+      .name-divider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+
+    <div class="name-row">
+
+      <!-- こんにちは -->
+      <div class="jp-col">
+        <span class="jp">こんにちは</span>
+        <span class="jp-sub">(hello)</span>
+      </div>
+
+      <span class="name-divider">/</span>
+
+      <!-- I am exposedapi -->
+      <div class="handle-col">
+        <div class="handle-top">
+          <span class="i-am">I am</span>
+          <span class="handle">exposedapi</span>
+        </div>
+        <span class="handle-sub">(aka aman)</span>
+      </div>
+
+    </div>
+
+    <p class="tagline">
+      Security Learner
+      <span>•</span>
+      Builder
+      <span>•</span>
+      Breaker
+    </p>
+
+    <p class="description">
+      Documenting my journey through CTFs, bug bounty hunting,<br>and hands-on security exploration.
+    </p>
+
+  </div>
+
+  <div class="cards">
+
+    <a class="card" href="/ctfs">
+      <div class="card-title">CTFs</div>
+      <div class="card-desc">Binary exploitation, crypto puzzles, web, web3 — from source to shell, one flag at a time.</div>
+    </a>
+
+    <a class="card" href="/bug-bounties">
+      <div class="card-title">Bug Bounties</div>
+      <div class="card-desc">Real-world findings, mistakes, and lessons learned along the way.</div>
+    </a>
+
+    <a class="card" href="/work">
+      <div class="card-title">Work</div>
+      <div class="card-desc">Experience, internships, and practical exposure in security.</div>
+    </a>
+
+  </div>
+
+  <footer class="footer">// learn · break · document</footer>
+
+</body>
+</html>
