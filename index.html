@@ -25,10 +25,11 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; height: 100%; }
 
     body {
       min-height: 100vh;
+      height: 100%;
       background: linear-gradient(150deg,
         #ffffff 0%,
         #eff6ff 22%,
@@ -43,7 +44,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 52px 24px 68px;
+      padding: 52px 24px 28px;
       position: relative;
       overflow-x: hidden;
     }
@@ -61,7 +62,7 @@
       text-align: center;
       position: relative;
       z-index: 1;
-      margin-bottom: 48px;
+      margin-bottom: 68px;
     }
 
     /* ── Main title row ── */
@@ -181,6 +182,7 @@
     /* ── Cards ── */
     .cards {
       display: flex;
+      margin-bottom: 48px;
       gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
@@ -230,13 +232,13 @@
     /* ── Footer ── */
     .footer {
       margin-top: auto;
-      padding-top: 120px;
+      padding-top: 0;
       font-family: var(--font-mono);
       font-size: 0.68rem;
       color: var(--text-muted);
       opacity: 0.5;
       letter-spacing: 0.08em;
-      z-index: 0.7;
+      z-index: 1;
     }
 
     /* ── Animations ── */
