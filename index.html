@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Roboto+Mono:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido:wght@200;300;400&family=Roboto+Mono:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -18,7 +18,7 @@
       --card-bg:      rgba(255,255,255,0.58);
       --card-border:  rgba(59,130,246,0.15);
       --card-shadow:  0 4px 24px rgba(37,99,235,0.08);
-      --font-jp:      'Noto Serif JP', serif;
+      --font-jp:      'Zen Kurenaido', serif;
       --font-mono:    'Roboto Mono', monospace;
       --font-sans:    'DM Sans', sans-serif;
       --font-sf:      'IBM Plex Sans', sans-serif;
@@ -42,7 +42,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 52px 24px 68px;
       position: relative;
       overflow-x: hidden;
@@ -69,45 +69,34 @@
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      gap: 22px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
-    /* こんにちは column */
+    /* column */
     .jp-col {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 2px;
     }
 
     .jp {
       font-family: var(--font-jp);
-      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      font-size: clamp(1.9rem, 4.5vw, 3rem);
       font-weight: 200;
       color: var(--text-primary);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.01em;
       line-height: 1.1;
     }
 
     .jp-sub {
-      font-family: var(--font-sf);
+      font-family: var(--font-jp);
       font-size: 0.72rem;
       font-weight: 300;
       color: var(--text-muted);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.07em;
       font-style: italic;
-    }
-
-    /* divider */
-    .name-divider {
-      font-family: var(--font-sf);
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
-      font-weight: 200;
-      color: var(--text-muted);
-      opacity: 0.45;
-      padding-bottom: 4px;
-      line-height: 1;
     }
 
     /* I am + exposedapi column */
@@ -121,41 +110,41 @@
     /* "I am" prefix sits inline with exposedapi */
     .handle-top {
       display: flex;
-      align-items: baseline;
-      gap: 10px;
+      align-items: center;
+      gap: 6px;
     }
 
     .i-am {
       font-family: var(--font-sf);
-      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
       font-weight: 300;
       color: var(--text-primary);
       letter-spacing: 0.02em;
       line-height: 1;
     }
 
-    /* exposedapi — gradient light pink → white → baby pink */
+    /* exposedapi — gradient light pink -> pink */
     .handle {
-      font-family: var(--font-mono);
-      font-size: clamp(2.1rem, 5vw, 3.4rem);
-      font-weight: 700;
+      font-family: var(--font-sf);
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.1;
-      background: linear-gradient(90deg, #f9a8d4 0%, #fce7f3 38%, #ffffff 62%, #fbcfe8 100%);
+      text-transform: lowercase;
+      background: linear-gradient(90deg,#ebcad7 0%,#ef95b9 50%,#f58bc7 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       /* subtle text shadow so it reads on the light bg */
       filter: drop-shadow(0 1px 6px rgba(236,72,153,0.18));
-      font-variant: small-caps;
     }
 
     .handle-sub {
-      font-family: var(--font-sf);
+      font-family: var(--font-jp);
       font-size: 0.72rem;
       font-weight: 300;
       color: var(--text-muted);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.07em;
       font-style: italic;
     }
 
@@ -166,7 +155,7 @@
       font-size: clamp(0.78rem, 1.3vw, 0.9rem);
       font-weight: 500;
       color: var(--text-body);
-      letter-spacing: 0.2em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       opacity: 0.8;
     }
@@ -184,8 +173,9 @@
       font-size: clamp(0.8rem, 1.35vw, 0.9rem);
       color: var(--text-body);
       max-width: 500px;
-      line-height: 1.78;
+      line-height: 1.72;
       opacity: 0.78;
+      text-align: center;
     }
 
     /* ── Cards ── */
@@ -239,13 +229,14 @@
 
     /* ── Footer ── */
     .footer {
-      margin-top: 48px;
+      margin-top: auto;
+      padding-top: 120px;
       font-family: var(--font-mono);
       font-size: 0.68rem;
       color: var(--text-muted);
       opacity: 0.5;
       letter-spacing: 0.08em;
-      z-index: 1;
+      z-index: 0.7;
     }
 
     /* ── Animations ── */
@@ -273,13 +264,11 @@
 
     <div class="name-row">
 
-      <!-- こんにちは -->
+      <!-- おす -->
       <div class="jp-col">
-        <span class="jp">こんにちは</span>
-        <span class="jp-sub">(hello)</span>
+        <span class="jp">おす</span>
+        <span class="jp-sub">[hey]</span>
       </div>
-
-      <span class="name-divider">/</span>
 
       <!-- I am exposedapi -->
       <div class="handle-col">
@@ -287,7 +276,7 @@
           <span class="i-am">I am</span>
           <span class="handle">exposedapi</span>
         </div>
-        <span class="handle-sub">(aka aman)</span>
+        <span class="handle-sub">[aka aman]</span>
       </div>
 
     </div>
