@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>work — exposedapi</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido:wght@200;300;400&family=Roboto+Mono:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue-accent:  #2563eb;
+      --text-primary: #0f172a;
+      --text-muted:   #8a94a6;
+      --text-body:    #334155;
+      --card-bg:      rgba(255,255,255,0.58);
+      --card-border:  rgba(59,130,246,0.15);
+      --card-shadow:  0 4px 24px rgba(37,99,235,0.08);
+      --font-jp:      'Zen Kurenaido', serif;
+      --font-mono:    'Roboto Mono', monospace;
+      --font-sans:    'DM Sans', sans-serif;
+      --font-sf:      'IBM Plex Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(150deg,
+        #ffffff 0%,
+        #eff6ff 22%,
+        #dbeafe 45%,
+        #bfdbfe 68%,
+        #93c5fd 88%,
+        #60a5fa 100%
+      );
+      font-family: var(--font-sf);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 36px 0;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .nav-back {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 1; }
+
+    .nav-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--text-primary);
+      opacity: 0.5;
+      text-transform: uppercase;
+    }
+
+    .nav-handle {
+      font-family: var(--font-sf);
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: linear-gradient(90deg,#ebcad7 0%,#ef95b9 50%,#f58bc7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Main layout ── */
+    .workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 0;
+      padding: 20px 36px 0;
+      position: relative;
+      z-index: 1;
+      min-height: 0;
+    }
+
+    /* ── LEFT PANEL: Timeline ── */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-right: 28px;
+      border-right: 1px solid rgba(59,130,246,0.13);
+      overflow: hidden;
+    }
+
+    .panel-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      opacity: 0.6;
+    }
+
+    /* Timeline */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 10px;
+      bottom: 10px;
+      width: 1px;
+      background: linear-gradient(180deg, rgba(59,130,246,0.3) 0%, rgba(59,130,246,0.08) 100%);
+    }
+
+    .tl-item {
+      display: flex;
+      gap: 14px;
+      padding: 10px 10px 10px 0;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 0.18s;
+      position: relative;
+    }
+    .tl-item:hover { background: rgba(255,255,255,0.38); }
+    .tl-item.active { background: rgba(255,255,255,0.6); }
+
+    .tl-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 2px solid rgba(59,130,246,0.35);
+      background: #fff;
+      flex-shrink: 0;
+      margin-top: 3px;
+      margin-left: 0;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .tl-item.active .tl-dot,
+    .tl-item:hover .tl-dot {
+      border-color: var(--blue-accent);
+      background: #dbeafe;
+    }
+
+    .tl-content { flex: 1; min-width: 0; }
+
+    .tl-company {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tl-role {
+      font-family: var(--font-sf);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-top: 1px;
+    }
+
+    .tl-period {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      opacity: 0.65;
+      margin-top: 3px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Extras section under timeline ── */
+    .extras {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(59,130,246,0.1);
+    }
+
+    .extras-section { margin-bottom: 12px; }
+
+    .extras-label {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.55;
+      margin-bottom: 7px;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .pill {
+      font-family: var(--font-sf);
+      font-size: 0.66rem;
+      color: var(--text-body);
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(59,130,246,0.16);
+      border-radius: 20px;
+      padding: 3px 9px;
+      line-height: 1.4;
+      white-space: nowrap;
+      backdrop-filter: blur(8px);
+    }
+
+    .pill.highlight {
+      background: rgba(239,149,185,0.14);
+      border-color: rgba(239,149,185,0.38);
+      color: #be185d;
+    }
+
+    /* ── RIGHT PANEL: Detail ── */
+    .right-panel {
+      padding-left: 36px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .detail-pane {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      animation: fadeUp 0.32s ease both;
+      height: 100%;
+      overflow: hidden;
+    }
+    .detail-pane.visible { display: flex; }
+
+    .detail-header {
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .detail-company {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .detail-role-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .detail-role {
+      font-family: var(--font-sf);
+      font-size: 0.82rem;
+      color: var(--text-body);
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .detail-badge {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(37,99,235,0.08);
+      color: var(--blue-accent);
+      border: 1px solid rgba(37,99,235,0.18);
+    }
+
+    .detail-meta {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .detail-divider {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(59,130,246,0.18) 0%, transparent 100%);
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Bullets */
+    .bullet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 6px;
+      mask-image: linear-gradient(180deg, #000 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, #000 85%, transparent 100%);
+    }
+
+    .bullet-list::-webkit-scrollbar { width: 3px; }
+    .bullet-list::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.2); border-radius: 2px; }
+
+    .bullet {
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .bullet-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(59,130,246,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .bullet-text {
+      font-family: var(--font-sf);
+      font-size: 0.78rem;
+      color: var(--text-body);
+      line-height: 1.65;
+      font-weight: 400;
+    }
+
+    .bullet-text strong {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* tag chips inside bullets */
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(37,99,235,0.07);
+      color: #2563eb;
+      border: 1px solid rgba(37,99,235,0.15);
+      margin: 0 2px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 8px 36px 30px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      opacity: 0.5;
+      letter-spacing: 0.08em;
+      z-index: 1;
+      position: relative;
+      text-align: center;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav    { animation: fadeUp 0.5s 0.0s ease both; }
+    .left-panel  { animation: fadeUp 0.6s 0.15s ease both; }
+    .right-panel { animation: fadeUp 0.6s 0.28s ease both; }
+    .footer { animation: fadeUp 0.5s 0.4s ease both; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      body { overflow-y: auto; }
+      html { overflow: auto; }
+      .workspace { grid-template-columns: 1fr; padding: 16px 20px 0; }
+      .left-panel { border-right: none; border-bottom: 1px solid rgba(59,130,246,0.13); padding-right: 0; padding-bottom: 20px; }
+      .right-panel { padding-left: 0; padding-top: 20px; }
+      .nav { padding: 16px 20px 0; }
+      .footer { padding: 12px 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a class="nav-back" href="/">← back</a>
+    <span class="nav-title">work</span>
+    <span class="nav-handle">exposedapi</span>
+  </nav>
+
+  <!-- Main -->
+  <div class="workspace">
+
+    <!-- LEFT -->
+    <div class="left-panel">
+      <div class="panel-label">// experience</div>
+
+      <div class="timeline">
+
+        <div class="tl-item active" data-pane="toolagen" onclick="select(this)">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-company">Toolagen Technologies</div>
+            <div class="tl-role">IT Security & Infra Specialist</div>
+            <div class="tl-period">Feb 2026 → present</div>
+          </div>
+        </div>
+
+        <div class="tl-item" data-pane="safe" onclick="select(this)">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-company">Safe Security</div>
+            <div class="tl-role">Security Engineer Intern</div>
+            <div class="tl-period">Jan 2025 – Jun 2025</div>
+          </div>
+        </div>
+
+        <div class="tl-item" data-pane="bitsave" onclick="select(this)">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-company">BitSave</div>
+            <div class="tl-role">Security Engineer Intern</div>
+            <div class="tl-period">Jun 2024 – Aug 2024</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Extras -->
+      <div class="extras">
+
+        <div class="extras-section">
+          <div class="extras-label">// ctf</div>
+          <div class="pill-group">
+            <span class="pill">H7Tex — RE player (2023)</span>
+            <span class="pill">0xfun</span>
+            <span class="pill">HTB Team Captain · UPES</span>
+          </div>
+        </div>
+
+        <div class="extras-section">
+          <div class="extras-label">// freelance</div>
+          <div class="pill-group">
+            <span class="pill">HackerOne</span>
+            <span class="pill">Bugcrowd</span>
+            <span class="pill">Intigriti</span>
+            <span class="pill">56 private invitations</span>
+            <span class="pill">11 P1s · 19 P2s · 35 P4/P5s</span>
+          </div>
+        </div>
+
+        <div class="extras-section">
+          <div class="extras-label">// recognition</div>
+          <div class="pill-group">
+            <span class="pill highlight">HTB College Ambassador · UPES</span>
+            <span class="pill highlight">212th on CTFlearn</span>
+            <span class="pill highlight">Pro Hacker · Hack The Box</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-panel">
+
+      <!-- Toolagen (default visible) -->
+      <div class="detail-pane visible" id="pane-toolagen">
+        <div class="detail-header">
+          <div class="detail-company">Toolagen Technologies</div>
+          <div class="detail-role-row">
+            <span class="detail-role">IT Security &amp; Infrastructure Specialist</span>
+            <span class="detail-badge">Full-time</span>
+          </div>
+          <div class="detail-meta">Feb 2026 → present &nbsp;·&nbsp; Remote</div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="bullet-list">
+          <div class="bullet" style="animation-delay:0.05s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Conduct continuous <strong>web and mobile pentesting</strong> across client projects, identifying and validating vulnerabilities across the full stack.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.1s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Validate and triage findings from <strong>automated SAST scanners</strong> — eliminating false positives and prioritising genuine exposures for remediation.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.15s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text"><strong>Endpoint security management</strong> across the organisation — hardening devices, enforcing compliance baselines, and responding to security incidents.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.2s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Manage <strong>Microsoft Intune</strong> — device enrolment, configuration profiles, compliance policies, and conditional access rules for all endpoints.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.25s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Authored and deployed <span class="tag">LAPS</span> policy in Intune to rotate local admin credentials automatically, eliminating static password risk across all systems.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.3s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Lead periodic <strong>IT audits and security compliance reviews</strong> — assessing system configurations, user access, and policy adherence against defined baselines.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.35s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Handle day-to-day <strong>IT issues and escalations</strong> while maintaining infrastructure uptime and security posture simultaneously.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Safe Security -->
+      <div class="detail-pane" id="pane-safe">
+        <div class="detail-header">
+          <div class="detail-company">Safe Security</div>
+          <div class="detail-role-row">
+            <span class="detail-role">Security Engineer Intern</span>
+            <span class="detail-badge">Internship</span>
+          </div>
+          <div class="detail-meta">Jan 2025 – Jun 2025 &nbsp;·&nbsp; Delhi, India</div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="bullet-list">
+          <div class="bullet" style="animation-delay:0.05s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Manually validated <span class="tag">Semgrep SAST</span> findings through source code review; investigated RDP exploit flags to eliminate false positives and surface genuine security exposures in internal products.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.1s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Architected and deployed a <strong>full honeypot infrastructure from scratch</strong> — SSH, web login decoys, <span class="tag">MSSQL</span>, <span class="tag">PostgreSQL</span>, and SMTP honeypots; automated deployment with Ansible and hardened the network using iptables, port mimicry, and one-way communication.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.15s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Built a <strong>real-time attack monitoring system</strong> using <span class="tag">FastAPI</span> <span class="tag">Uvicorn</span> <span class="tag">MongoDB</span> — JavaScript dashboards with geolocation visualisation, WebSocket connectivity, cron-scheduled tasks, and watchdog process monitoring.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.2s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Implemented <strong>secure coding practices</strong> and hardened <span class="tag">Apache2</span> configurations to prevent common web vulnerabilities; fortified infrastructure against recon and exploitation attempts.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.25s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Led internal <strong>VAPT engagement</strong> — discovered <strong>2 P1 bugs</strong> (IDOR / BAC) and <strong>4 P3 bugs</strong> including a critical file upload flaw.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BitSave -->
+      <div class="detail-pane" id="pane-bitsave">
+        <div class="detail-header">
+          <div class="detail-company">BitSave</div>
+          <div class="detail-role-row">
+            <span class="detail-role">Security Engineer Intern</span>
+            <span class="detail-badge">Internship</span>
+          </div>
+          <div class="detail-meta">Jun 2024 – Aug 2024 &nbsp;·&nbsp; Remote</div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="bullet-list">
+          <div class="bullet" style="animation-delay:0.05s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Hardened system security by implementing <span class="tag">Cloudflare</span> features — CAPTCHA challenges, WAF rule sets, and DDoS protection to shield the platform from external attacks.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.1s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Tested APIs for security flaws and <strong>Cloudflare integration issues</strong>, ensuring proper coverage and configuration across all exposed endpoints.</div>
+          </div>
+          <div class="bullet" style="animation-delay:0.15s">
+            <div class="bullet-icon">*</div>
+            <div class="bullet-text">Performed <strong>Android app pentesting</strong> and authored <span class="tag">Frida</span> scripts to simulate bypass techniques — then developed defences against the identified attack vectors.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">// learn · break · document</footer>
+
+  <script>
+    function select(el) {
+      document.querySelectorAll('.tl-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      const paneId = 'pane-' + el.dataset.pane;
+      document.querySelectorAll('.detail-pane').forEach(p => p.classList.remove('visible'));
+      const pane = document.getElementById(paneId);
+      pane.classList.add('visible');
+      // Re-trigger animation by clone trick
+      void pane.offsetWidth;
+    }
+  </script>
+
+</body>
+</html>
