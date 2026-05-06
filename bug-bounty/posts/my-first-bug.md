@@ -4,7 +4,7 @@ This was one of those moments where things looked completely locked down at firs
 
 I was testing an application where different roles had clearly defined permissions. As a viewer, I wasn’t supposed to see the list of users. That part was working as expected. When I hit the endpoint:
 
-GET /api/v3/users
+`GET /api/v3/users`
 
 I got a clean `401 Unauthorized`. No surprises there.
 
@@ -24,23 +24,23 @@ Before finding the actual issue, I went through a bunch of common bypass attempt
 
 I tried encoding tricks:
 
-/api/v3/%75sers  
-/api/v3/users%2f  
+```/api/v3/%75sers  
+/api/v3/users%2f```
 
 No luck. Same unauthorized responses.
 
 Then I played with HTTP methods:
 
-POST /api/v3/users  
-PUT /api/v3/users  
+```POST /api/v3/users  
+PUT /api/v3/users```
 
 Still blocked. No unexpected behavior.
 
 I also tested header-based tricks, hoping something upstream might trust client input:
 
-X-Forwarded-For: 127.0.0.1  
+```X-Forwarded-For: 127.0.0.1  
 X-Original-URL: /api/v3/users  
-X-Rewrite-URL: /api/v3/users  
+X-Rewrite-URL: /api/v3/users```
 
 Again, nothing. Either properly ignored or validated.
 
@@ -50,7 +50,7 @@ At this point, I knew the application wasn’t falling for the usual low-effort 
 
 Out of habit more than expectation, I tried slightly modifying the endpoint:
 
-GET /api/v3/uSers
+`GET /api/v3/uSers`
 
 This time, the response came back `200 OK`.
 
@@ -71,11 +71,11 @@ That mismatch created a bypass.
 
 The system blocked:
 
-/api/v3/users
+`/api/v3/users`
 
 But allowed:
 
-/api/v3/uSers
+`/api/v3/uSers`
 
 Even though both resolved to the same underlying functionality.
 
@@ -98,3 +98,7 @@ The actual bypass came from something simple that I almost didn’t try.
 That’s the part I enjoyed the most. Not just finding the bug, but understanding why everything else failed and why this worked.
 
 It reminded me that sometimes the interesting issues aren’t hidden behind complexity. They sit in small inconsistencies that only show up when you look just a bit differently.
+
+---
+
+*Triaged as P1 · Resolved · Bounty awarded.*
