@@ -7,10 +7,10 @@
     "platform": "HackerOne"
   },
   {
-    "title": "Stored XSS via SVG Upload Bypassing Content-Type Checks",
-    "file": "stored-xss-svg-upload.md",
-    "date": "Feb 2025",
+    "title": "My First Bug",
+    "file": "my-first-bug.md",
+    "date": "Jan 2023",
     "severity": "P2",
-    "platform": "Bugcrowd"
+    "platform": "Self-Hosted"
   }
 ]
