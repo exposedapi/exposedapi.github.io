@@ -1,0 +1,16 @@
+[
+  {
+    "title": "IDOR on Profile Picture Endpoint Exposed Any User's PII",
+    "file": "idor-profile-pii.md",
+    "date": "Apr 2025",
+    "severity": "P1",
+    "platform": "HackerOne"
+  },
+  {
+    "title": "Stored XSS via SVG Upload Bypassing Content-Type Checks",
+    "file": "stored-xss-svg-upload.md",
+    "date": "Feb 2025",
+    "severity": "P2",
+    "platform": "Bugcrowd"
+  }
+]
