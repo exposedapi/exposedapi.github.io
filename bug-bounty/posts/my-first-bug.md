@@ -115,4 +115,4 @@ It reminded me that sometimes the interesting issues aren't hidden behind comple
 
 ---
 
-*Triaged as P2· Resolved · Bounty awarded.*
+*Triaged as P2 · Resolved · Bounty awarded.*
