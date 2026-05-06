@@ -1,0 +1,21 @@
+[
+  {
+    "event": "PicoCTF 2024",
+    "file": "picoctf-2024.md",
+    "date": "Mar 2024",
+    "categories": ["web", "rev", "crypto"],
+    "placement": "top 5%"
+  },
+  {
+    "event": "HTB Cyber Apocalypse 2024",
+    "file": "htb-cyber-apocalypse-2024.md",
+    "date": "Mar 2024",
+    "categories": ["pwn", "rev", "web3"]
+  },
+  {
+    "event": "CTFlearn — RE Collection",
+    "file": "ctflearn-re.md",
+    "date": "2023 – 2024",
+    "categories": ["rev", "misc"]
+  }
+]
