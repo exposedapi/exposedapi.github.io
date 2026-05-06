@@ -42,4 +42,4 @@ Validate that the authenticated user's session ID matches the requested resource
 
 ---
 
-*Triaged as P1 · Resolved in 6 days · Bounty awarded.*
+*Triaged as P1 · Resolved · Bounty awarded.*
