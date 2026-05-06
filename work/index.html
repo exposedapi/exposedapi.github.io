@@ -25,10 +25,10 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; }
+    html { scroll-behavior: smooth; }
 
-    body {
-      min-height: 100vh;
+    html {
+      min-height: 100%;
       background: linear-gradient(150deg,
         #ffffff 0%,
         #eff6ff 22%,
@@ -37,6 +37,11 @@
         #93c5fd 88%,
         #60a5fa 100%
       );
+      background-attachment: fixed;
+    }
+    
+    body {
+      min-height: 100vh;
       font-family: var(--font-sf);
       color: var(--text-primary);
       display: flex;
