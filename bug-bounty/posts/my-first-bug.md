@@ -1,4 +1,4 @@
-# Finding My First Bug: A Small Bypass That Meant a Lot
+## Finding My First Bug: A Small Bypass That Meant a Lot
 
 This was one of those moments where things looked completely locked down at first, and then a tiny inconsistency opened everything up.
 
